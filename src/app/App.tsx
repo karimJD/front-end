@@ -12,12 +12,11 @@ import {
   PublicOnlyRouteGuard,
 } from '@/app/router/guards';
 import { Error404, ErrorBoundary } from '@/errors';
+import MoviesRoutes from './movie/MoviesRoutes';
 
 const AdminRoutes = React.lazy(() => import('@/app/admin/AdminRoutes'));
 const AccountRoutes = React.lazy(() => import('@/app/account/AccountRoutes'));
-const DashboardRoutes = React.lazy(
-  () => import('@/app/dashboard/DashboardRoutes')
-);
+
 
 export const App = () => {
   return (
@@ -26,9 +25,9 @@ export const App = () => {
         <Layout>
           <Suspense fallback={<Loader />}>
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<Navigate to="/movie" replace />} />
 
-              <Route
+           {/*    <Route
                 path="login"
                 element={
                   <PublicOnlyRouteGuard>
@@ -36,6 +35,7 @@ export const App = () => {
                   </PublicOnlyRouteGuard>
                 }
               />
+              */}
               <Route
                 path="logout"
                 element={
@@ -55,11 +55,11 @@ export const App = () => {
               />
 
               <Route
-                path="dashboard/*"
+                path="movie/*"
                 element={
-                  <AuthenticatedRouteGuard>
-                    <DashboardRoutes />
-                  </AuthenticatedRouteGuard>
+                  // <AuthenticatedRouteGuard>
+                    <MoviesRoutes />
+                  // </AuthenticatedRouteGuard>
                 }
               />
 

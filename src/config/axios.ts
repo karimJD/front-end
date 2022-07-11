@@ -23,7 +23,7 @@ Axios.interceptors.request.use(
 
 Axios.interceptors.response.use((response: AxiosResponse) => {
   if (response.headers['x-total-count']) {
-    return {
+    return {      
       content: response.data,
       totalItems: response?.headers['x-total-count'],
     };
