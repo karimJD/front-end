@@ -6,7 +6,7 @@ import {
 
 import { MovieList } from '@/app/movie/movies.types';
 
-let token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY1NzYxMDAyOX0.P4kxaBEDTtWjd93aPdl3XXzGYVRbbpLybpFsSkm2uF7RQ6kPK9PdrWNkb8ln-6YHnjltBt-RBu5YmcY1-NbADQ';
+let token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY1NzY5ODA3M30.6ElMnGYshdIEt2gooPakXY9To2_vA0GRm_DckG87oiRfRuaZTRy-xv43ge_xJmtN9KQnIFGGwSMBQ6kUK_yLuw';
 
 const moviesKeys = {
   all: () => ['moviesService'] as const,

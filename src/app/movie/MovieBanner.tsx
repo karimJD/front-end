@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  Badge,
   Box,
   Button,
   Center,
@@ -9,139 +10,98 @@ import {
   Heading,
   Image,
   Text,
-  Badge
 } from '@chakra-ui/react';
+import dayjs from 'dayjs';
 
 import { useMoviesList } from './movies.service';
+import { Movie } from './movies.types';
 
-export const MovieBanner = ({ movieId }: { movieId: number}) => {
-  let display: any = 'Just preventing error by this char';
-
+export const MovieBanner = ({ movieId }: { movieId: number }) => {
   const { movies, isLoadingPage } = useMoviesList();
 
-  const setMonth = (month: number) => {
-    switch (month) {
-      case 1:
-        return 'january';
+  // movieId is sent from moviesListBox to the slected movie, If the application just started, the defaul movie Id will be -1
+  // -1 can't be assigned to a Id, so the application will know that there's no movie selected
+  // when there's no movie selected the application will the latest movie uploaded.
 
-      case 2:
-        return 'February';
+  const movie =
+    movieId === -1
+      ? movies?.[movies?.length - 1]
+      : movies?.find((movie) => movie.id === movieId);
 
-      case 3:
-        return 'March';
-
-      case 4:
-        return 'April';
-
-      case 5:
-        return 'May';
-
-      case 6:
-        return 'June';
-
-      case 7:
-        return 'July';
-
-      case 8:
-        return 'August';
-
-      case 9:
-        return 'September';
-
-      case 10:
-        return 'October';
-
-      case 11:
-        return 'November';
-
-      case 12:
-        return 'December';
-    }
-  };
-
-  if (movieId === -1) {
-    if (isLoadingPage === false) {
-      display = movies![movies!.length - 1];
-    }
-  } else {
-    movies?.map((movie) => {
-      if (movie.id === movieId) {
-        display = movie;
-        let month = display.releaseDate.substr(5, 2);
-        setMonth(month);
-      }
-    });
-  }
-
+  const {
+    title,
+    description,
+    actors,
+    ageLimit,
+    duration,
+    image,
+    releaseDate,
+  }: Movie = movie!;
 
   return (
     <Box>
       <Flex direction="row">
         <Box flex={4}>
           <Flex>
-            <Heading mt={5}>
-              {isLoadingPage ? 'loading...' : display.title}
-            </Heading>
-            <Badge ml='1' mt={7} fontSize='lg' colorScheme='green'>
+            <Heading mt={5}>{isLoadingPage ? 'loading...' : title}</Heading>
+            <Badge ml="1" mt={7} fontSize="lg" colorScheme="green">
               <Center mt={0.5}>Latest</Center>
             </Badge>
           </Flex>
           <Flex>
-              <Text fontSize="xl" mt={5} fontWeight={400}>
-                {isLoadingPage
-                  ? 'loading...'
-                  : display.releaseDate.substr(8, 2)}
-              </Text>
-              <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
-                {isLoadingPage
-                  ? 'loading...'
-                  : setMonth(parseInt(display.releaseDate.substr(5, 2), 10))}
-              </Text>
-              <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
-                {isLoadingPage
-                  ? 'loading...'
-                  : display.releaseDate.substr(0, 4)}
-              </Text>
+            <Text fontSize="xl" mt={5} fontWeight={400}>
+              {isLoadingPage ? 'loading...' : dayjs(releaseDate).format('D')}
+            </Text>
+            <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
+              {isLoadingPage ? 'loading...' : dayjs(releaseDate).format('MMMM')}
+            </Text>
+            <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
+              {isLoadingPage ? 'loading...' : dayjs(releaseDate).format('YYYY')}
+            </Text>
           </Flex>
           <Text fontSize="xl" fontWeight={400} mt={2}>
-            {isLoadingPage ? 'loading...' : display.duration} minutes
+            {isLoadingPage ? 'loading...' : duration} minutes
           </Text>
           <Text fontSize="xl" fontWeight={400} mt={2}>
-            +{isLoadingPage ? 'loading...' : display.ageLimit} ans
+            +{isLoadingPage ? 'loading...' : ageLimit} ans
           </Text>
           <Text fontSize="md" mt={8}>
-            {isLoadingPage ? 'loading...' : display.description}
+            {isLoadingPage ? 'loading...' : description}
           </Text>
           <Divider orientation="horizontal" />
-            <Text fontSize="xl" fontWeight={400} mt={5}>Acteurs</Text>
-            <Text fontSize="lg" fontWeight={300} mt={1}>
-              {isLoadingPage ? 'loading...' : display.actors}
-            </Text>
+          <Text fontSize="xl" fontWeight={400} mt={5}>
+            Acteurs
+          </Text>
+          <Text fontSize="lg" fontWeight={300} mt={1}>
+            {isLoadingPage ? 'loading...' : actors}
+          </Text>
           <Divider orientation="horizontal" />
-              <Text fontSize="xl" fontWeight={400} mt={5}>Catégories</Text>
-              <Flex>
-              <Box bgColor='green' borderRadius={5} w={100}  mt={1}>
-                <Center>
-                  <Text fontSize="lg" fontWeight={400}>
-                    Romance
-                  </Text>
-                </Center>
-              </Box>
-              <Box bgColor='green' borderRadius={5} w={100}  mt={1} ml={2}>
-                <Center>
-                  <Text fontSize="lg" fontWeight={400}>
-                    Action
-                  </Text>
-                </Center>
-              </Box>
-              <Box bgColor='green' borderRadius={5} w={100}  mt={1} ml={2}>
-                <Center>
-                  <Text fontSize="lg" fontWeight={400}>
-                    Horror
-                  </Text>
-                </Center>
-              </Box>
-              </Flex>
+          <Text fontSize="xl" fontWeight={400} mt={5}>
+            Catégories
+          </Text>
+          <Flex>
+            <Box bgColor="green" borderRadius={5} w={100} mt={1}>
+              <Center>
+                <Text fontSize="lg" fontWeight={400}>
+                  Romance
+                </Text>
+              </Center>
+            </Box>
+            <Box bgColor="green" borderRadius={5} w={100} mt={1} ml={2}>
+              <Center>
+                <Text fontSize="lg" fontWeight={400}>
+                  Action
+                </Text>
+              </Center>
+            </Box>
+            <Box bgColor="green" borderRadius={5} w={100} mt={1} ml={2}>
+              <Center>
+                <Text fontSize="lg" fontWeight={400}>
+                  Horror
+                </Text>
+              </Center>
+            </Box>
+          </Flex>
           <Center mt={10}>
             <Button colorScheme="teal" size="lg">
               Watch Now
@@ -155,7 +115,7 @@ export const MovieBanner = ({ movieId }: { movieId: number}) => {
             mr={0}
             h={400}
             w={300}
-            src={`data:image/jpeg;base64,${display.image}`}
+            src={`data:image/jpeg;base64,${image}`}
           />
         </Box>
       </Flex>
