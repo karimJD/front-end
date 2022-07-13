@@ -2,59 +2,59 @@ import React from 'react';
 
 import { Box, Center, Heading, Image, Stack, Text } from '@chakra-ui/react';
 
-import { useMoviesList } from './movies.service';
+import { Movie } from '@/app/movie/movies.types';
+
 import { useCategoriesList } from './categories.service';
+import { useMoviesList } from './movies.service';
 
-
-export const MoviesListBox = ({setMovieId, categoryId}: any) => {
-
-  let categoryMovies: any= [];
-  let title;
-
-  const { movies } = useMoviesList();
+export const MoviesListBox = ({ setMovieId, categoryId }: any) => {
+  const { data: movies } = useMoviesList();
   const { categories }: any = useCategoriesList();
 
-  switch (categoryId) {
-    case 1:
-      title = "Action";
-      break;
-    case 4:
-      title = "Drama";
-      break;
-    case 5:
-      title = "Comedy";
-      break;
-    case 3:
-      title = "SiFi";
-      break;
-    case 2:
-      title = "Horror";
-      break;
-  }
+  console.log({ movies, categories });
 
-  const handleImgClick = (id: number) => {
-    setMovieId(id);
-    window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+  const getTitle = (categoryId: number) => {
+    switch (categoryId) {
+      case 1:
+        return 'Action';
+      case 4:
+        return 'Drama';
+      case 5:
+        return 'Comedy';
+      case 3:
+        return 'SiFi';
+      case 2:
+        return 'Horror';
+    }
   };
 
-  let selectedCategory = categories.filter((category: any) => (category.id === categoryId))
+  const handleImgClick = (id: number) => {
+    setMovieId({ ...categoryId, id: id });
+    setMovieId({ ...categoryId, state: true });
+    window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+  };
 
-  selectedCategory.map((category: any) => (
-      category.movies.map((CategoryMovie: any) => (
-        movies?.map(movie => {
-          if (movie.id === CategoryMovie.id) { 
-            categoryMovies.push(movie);
-          }
-        }) 
-      ))
-    ))
-  
-  
+  // let selectedCategory = categories.filter(
+  //   (category: any) => category.id === categoryId
+  // );
+
+  // selectedCategory.map((category: any) =>
+  //   category.movies.map((CategoryMovie: any) =>
+  //     movies?.content?.map((movie) => {
+  //       if (movie.id === CategoryMovie.id) {
+  //         categoryMovies.push(movie);
+  //       }
+  //     })
+  //   )
+  // );
+
+  const categoryMovies: Movie[] = [];
+
   return (
     <Box mt={100}>
-      <Heading size='lg'>{title}</Heading>
+      <Heading size="lg">{getTitle(categoryId)}</Heading>
       <Stack spacing={4} direction="row" mt={10} overflowY="scroll">
-        {categoryMovies?.map((movie: any) => (
+        {categoryMovies?.map((movie) => (
           <>
             <Box
               key={movie.id}

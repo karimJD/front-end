@@ -1,16 +1,12 @@
 import React from 'react';
 
-// import { useTranslation } from 'react-i18next';
-
-import { Link } from 'react-router-dom';
-
 import { Nav, NavGroup, NavItem } from '@/components';
 
-export const MovieNav = ({setCategoryId}: any) => {
- // const { t } = useTranslation();
+export const MovieNav = ({setCategoryId, setIsCalled}: {setCategoryId: (categoryId: number) => void , setIsCalled: (isCalled: boolean) => void}) => {
 
  const handleClick = (categoryId: number) => {
   setCategoryId(categoryId);
+  setIsCalled(true);
   window.scrollTo({ left: 0, top: 500, behavior: "smooth" });
  }
 
@@ -34,15 +30,11 @@ export const MovieNav = ({setCategoryId}: any) => {
         </NavItem>
         <NavItem
         onClick={() => handleClick(3)}
-          //as={Link}
-          //to="/admin/api"
-          //isActive={isActive('/admin/api')}
         >
           Sifi
         </NavItem>
         <NavItem
         onClick={() => handleClick(2)}
-          //isActive={isActive('/admin/api')}
         >
           Horror
         </NavItem>

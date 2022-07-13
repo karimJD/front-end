@@ -6,7 +6,7 @@ import {
 
 import { CategoryList } from '@/app/movie/movies.types';
 
-let token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY1NzY5ODA3M30.6ElMnGYshdIEt2gooPakXY9To2_vA0GRm_DckG87oiRfRuaZTRy-xv43ge_xJmtN9KQnIFGGwSMBQ6kUK_yLuw';
+let token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY1Nzc4NDYwMn0.kCKZuOD6kFcR3VqB8gLt9EQNCOgQeqUjQ_pgVw-bOkTQGCn0XQbuWZ7Bg-A-rZN_D-Zcy6EGc21svldb8FdGiQ';
 
 const categoriesKeys = {
   all: () => ['categoriesService'] as const,

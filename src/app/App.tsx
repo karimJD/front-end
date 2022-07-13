@@ -3,9 +3,11 @@ import React, { Suspense } from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 
+import { PageLogin } from '@/app/auth/PageLogin';
 import { PageLogout } from '@/app/auth/PageLogout';
 import { Layout, Loader } from '@/app/layout';
 import { AdminRouteGuard } from '@/app/router/guards';
+import { PublicOnlyRouteGuard } from '@/app/router/guards';
 import { Error404, ErrorBoundary } from '@/errors';
 
 const AdminRoutes = React.lazy(() => import('@/app/admin/AdminRoutes'));
@@ -21,9 +23,7 @@ export const App = () => {
             <Routes>
               <Route path="/" element={<Navigate to="/movies" replace />} />
 
-              {/* Avoiding Login, this will be deleted later */}
-
-              {/*    <Route
+              <Route
                 path="login"
                 element={
                   <PublicOnlyRouteGuard>
@@ -31,7 +31,6 @@ export const App = () => {
                   </PublicOnlyRouteGuard>
                 }
               />
-              */}
 
               <Route
                 path="logout"
@@ -52,13 +51,15 @@ export const App = () => {
               />
 
               <Route
-                path="movie/*"
+                path="movies/*"
                 element={
-                  <MoviesRoutes />
+                  <ErrorBoundary>
+                    <MoviesRoutes />
+                  </ErrorBoundary>
                 }
               />
 
-              <Route// </AuthenticatedRouteGuard>
+              <Route
                 path="admin/*"
                 element={
                   <AdminRouteGuard>
