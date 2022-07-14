@@ -19,7 +19,7 @@ export const useMoviesList = (
 ) => {
   return useQuery(
     moviesKeys.movies(),
-    (): Promise<MovieList> => Axios.get('/api/movies'),
+    (): Promise<MovieList> => Axios.get('/movies'),
     {
       keepPreviousData: true,
       ...config,

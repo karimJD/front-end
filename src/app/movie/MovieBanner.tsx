@@ -10,6 +10,7 @@ import {
   Flex,
   Heading,
   Image,
+  Stack,
   Text,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
@@ -27,6 +28,18 @@ export const MovieBanner = ({ movieId }: { movieId: number }) => {
     movieId === -1
       ? movies?.content?.[movies?.totalItems]
       : movies?.content?.find((movie) => movie.id === movieId);
+
+  if (!!movies?.totalItems) {
+    return (
+      <Stack>
+        {movies.content?.map((movie) => (
+          <Box>
+            {movie.id} - {movie.title}
+          </Box>
+        ))}
+      </Stack>
+    );
+  }
 
   if (isLoadingPage) {
     return (
