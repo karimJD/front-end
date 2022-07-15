@@ -10,7 +10,6 @@ import {
   Flex,
   Heading,
   Image,
-  Stack,
   Text,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
@@ -26,21 +25,15 @@ export const MovieBanner = ({ movieId }: { movieId: number }) => {
 
   const movie =
     movieId === -1
-      ? movies?.content?.[movies?.totalItems]
-      : movies?.content?.find((movie) => movie.id === movieId);
+      ? movies?.content?.[movies?.totalItems - 31] 
+      : movies?.content?.find((movie) => movie.id === movieId) ;
+  
+  const latest =
+    <Badge ml="2" mt={7} fontSize="lg" colorScheme="green">
+      <Center mt={0.5}>Latest</Center>
+    </Badge> ;
 
-  if (!!movies?.totalItems) {
-    return (
-      <Stack>
-        {movies.content?.map((movie) => (
-          <Box>
-            {movie.id} - {movie.title}
-          </Box>
-        ))}
-      </Stack>
-    );
-  }
-
+  console.log(movies)
   if (isLoadingPage) {
     return (
       <Center mt={200}>
@@ -54,9 +47,7 @@ export const MovieBanner = ({ movieId }: { movieId: number }) => {
           <Box flex={4}>
             <Flex>
               <Heading mt={5}>{movie?.title}</Heading>
-              <Badge ml="1" mt={7} fontSize="lg" colorScheme="green">
-                <Center mt={0.5}>Latest</Center>
-              </Badge>
+              {latest}
             </Flex>
             <Flex>
               <Text fontSize="xl" mt={5} fontWeight={400}>
@@ -125,7 +116,7 @@ export const MovieBanner = ({ movieId }: { movieId: number }) => {
               mr={0}
               h={400}
               w={300}
-              src={`data:image/jpeg;base64,${movie?.image}`}
+              src={'https://upload.wikimedia.org/wikipedia/en/3/31/Interceptor_%28film%29.jpg'}
             />
           </Box>
         </Flex>

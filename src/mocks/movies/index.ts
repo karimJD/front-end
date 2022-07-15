@@ -7,7 +7,7 @@ export const MoviesRoutes = (server: Server) => {
 };
 
 const getAll = withAuth((schema: any, request: Request) => {
-  const { page = 0, size = 10 } = request.queryParams;
+  const { page = 0, size = 40 } = request.queryParams;
   const start = Number(page) * Number(size);
   const end = start + Number(size);
   const movies = schema.all('movie');
