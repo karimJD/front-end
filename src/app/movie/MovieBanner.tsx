@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 
 import { useToastError } from '@/components';
 
+import { useCategoriesList } from './categories.service';
 import { useMoviesList } from './movies.service';
 
 export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
@@ -26,7 +27,7 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
     },
     retry: 0,
   });
-
+  const { data: categories }: any = useCategoriesList();
   const setDefaultBanner = () => {
     return movies?.content?.[movies?.totalItems - 1];
   };
@@ -38,7 +39,7 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
   };
 
   const movie = !!movieId ? setSelectedBanner(movieId!) : setDefaultBanner();
-
+  console.log(categories);
   const latest = (
     <Badge fontSize="lg" colorScheme="green" mt={2} ml={1}>
       <Center mt={0.5}>Latest</Center>
@@ -46,7 +47,7 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
   );
   if (isLoadingPage) {
     return (
-      <Center mt="20%">
+      <Center>
         <CircularProgress isIndeterminate color="green.300" />
       </Center>
     );
@@ -91,28 +92,20 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
           <Text fontSize="xl" fontWeight={400} mt={5}>
             Catégories
           </Text>
-          <Flex>
-            <Box bgColor="green" borderRadius={5} w={100} mt={1}>
-              <Center>
+          <Flex flexDirection="row">
+            {categories.content.map((category: any) => (
+              <Center
+                bgColor="green"
+                borderRadius={5}
+                mt={1}
+                flex={1}
+                margin={2}
+              >
                 <Text fontSize="lg" fontWeight={400}>
-                  Romance
+                  {category.name}
                 </Text>
               </Center>
-            </Box>
-            <Box bgColor="green" borderRadius={5} w={100} mt={1} ml={2}>
-              <Center>
-                <Text fontSize="lg" fontWeight={400}>
-                  Action
-                </Text>
-              </Center>
-            </Box>
-            <Box bgColor="green" borderRadius={5} w={100} mt={1} ml={2}>
-              <Center>
-                <Text fontSize="lg" fontWeight={400}>
-                  Horror
-                </Text>
-              </Center>
-            </Box>
+            ))}
           </Flex>
           <Center mt={10}>
             <Button colorScheme="teal" size="lg">
@@ -124,9 +117,6 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
           <Image
             mt={10}
             borderRadius={10}
-            mr={0}
-            h={400}
-            w={300}
             src={
               'https://upload.wikimedia.org/wikipedia/en/3/31/Interceptor_%28film%29.jpg'
             }
