@@ -1,19 +1,13 @@
 import Axios, { AxiosError } from 'axios';
-import {
-  UseQueryOptions,
-  useQuery
-} from 'react-query';
+import { UseQueryOptions, useQuery } from 'react-query';
 
-import { CategoryList } from '@/app/movie/movies.types';
-
-let token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTY1Nzc4NDYwMn0.kCKZuOD6kFcR3VqB8gLt9EQNCOgQeqUjQ_pgVw-bOkTQGCn0XQbuWZ7Bg-A-rZN_D-Zcy6EGc21svldb8FdGiQ';
+import { Category, CategoryList } from '@/app/movie/movies.types';
 
 const categoriesKeys = {
   all: () => ['categoriesService'] as const,
-  categories: () =>
-    [...categoriesKeys.all(), 'categories' ] as const,
-  category: () =>
-    [...categoriesKeys.all(), 'category'] as const,
+  categories: () => [...categoriesKeys.all(), 'categories'] as const,
+  category: ({ id }: { id?: number }) =>
+    [...categoriesKeys.all(), 'category', { id }] as const,
 };
 
 export const useCategoriesList = (
@@ -24,23 +18,35 @@ export const useCategoriesList = (
     InferQueryKey<typeof categoriesKeys.categories>
   > = {}
 ) => {
-  const result = useQuery(
+  return useQuery(
     categoriesKeys.categories(),
-    (): Promise<CategoryList> =>
-      Axios.get('http://localhost:8080/api/categories', { headers: {"Authorization" : token} }),
+    (): Promise<CategoryList> => Axios.get('/categories'),
     {
       keepPreviousData: true,
       ...config,
     }
   );
+};
 
-  const categories = result.data || []
-  const isLoadingCategories = result.isFetching;
-
+export const useCategory = (
+  categoryId?: number,
+  config: UseQueryOptions<
+    Category,
+    AxiosError,
+    Category,
+    InferQueryKey<typeof categoriesKeys.category>
+  > = {}
+) => {
+  const result = useQuery(
+    categoriesKeys.category({ id: categoryId }),
+    (): Promise<Category> => Axios.get(`/categories/${categoryId}`),
+    {
+      enabled: !!categoryId,
+      ...config,
+    }
+  );
   return {
-    categories,
-    isLoadingCategories,
+    category: result.data,
     ...result,
   };
 };
-

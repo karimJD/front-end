@@ -160,8 +160,3 @@ export const useUserRemove = (
     }
   );
 };
-
-
-
-// DISPLAY LIST OF USERS
-
