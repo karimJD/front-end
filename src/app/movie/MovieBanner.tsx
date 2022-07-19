@@ -18,6 +18,7 @@ import { useToastError } from '@/components';
 
 import { useCategoriesList } from './categories.service';
 import { useMoviesList } from './movies.service';
+import { Category } from './movies.types';
 
 export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
   const toastError = useToastError();
@@ -93,7 +94,7 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
             Catégories
           </Text>
           <Flex flexDirection="row">
-            {categories.content.map((category: any) => (
+            {categories.content.map((category: Category) => (
               <Center
                 bgColor="green"
                 borderRadius={5}
