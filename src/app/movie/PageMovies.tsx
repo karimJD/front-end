@@ -14,7 +14,7 @@ const MoviesListBox = React.lazy(() =>
 );
 
 export const PageMovies = () => {
-  const [movieId, setMovieId] = useState();
+  const [movieId, setMovieId] = useState<number | undefined>();
   const [categoryId, setCategoryId] = useState(0);
   const [isCalled, setIsCalled] = useState(false); // To check if the movies list box is called
 

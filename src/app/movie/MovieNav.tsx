@@ -11,7 +11,7 @@ export const MovieNav = ({
   setCategoryId: (categoryId: number) => void;
   setIsCalled: (isCalled: boolean) => void;
 }) => {
-  const { data: categories, isLoading: isLoadingPage } = useCategoriesList();
+  const { data: categories } = useCategoriesList();
 
   console.log(categories);
   const handleClick = (categoryId: number) => {

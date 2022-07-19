@@ -10,7 +10,7 @@ export const MoviesListBox = ({
   setMovieId,
   categoryId,
 }: {
-  setMovieId: (movieId: number) => void;
+  setMovieId: (movieId: number) => void | undefined;
   categoryId: number;
 }) => {
   const { data: movies } = useMoviesList();
