@@ -27,16 +27,17 @@ export const MoviesListBox = ({
   };
 
   return (
-    <Box mt={100}>
+    <Box mt={50}>
       <Heading size="lg" ml={5}>
         {category?.name}
       </Heading>
-      <Flex h={400} w="100%" flexDirection="row">
-        <ArrowLeftIcon flex={1} mt="20%" onClick={() => scroll(-500)} />
+      <Flex flexDirection="row">
+        <Center flex={1}>
+          <ArrowLeftIcon onClick={() => scroll(-500)} />
+        </Center>
         <Flex
           flex={10}
           ref={slider}
-          h={370}
           flexDirection="row"
           mt={5}
           overflow="scroll"
@@ -45,12 +46,10 @@ export const MoviesListBox = ({
           alignItems="center"
         >
           {movies?.content.map((movie) => (
-            <Box margin={2} w={300} h={350}>
+            <Box margin={2}>
               <Image
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXCDeWcTDLEWXq-hhpO5gUZh-rB0QNhSLvCRwUfPk1Vft1tBSH"
-                w={200}
-                h={300}
-                borderRadius={20}
+                borderRadius="lg"
                 _hover={{ cursor: 'pointer' }}
                 onClick={() => handleImgClick(movie.id)}
               />
@@ -60,7 +59,9 @@ export const MoviesListBox = ({
             </Box>
           ))}
         </Flex>
-        <ArrowRightIcon flex={1} mt="20%" onClick={() => scroll(500)} />
+        <Center flex={1}>
+          <ArrowRightIcon onClick={() => scroll(500)} />
+        </Center>
       </Flex>
     </Box>
   );

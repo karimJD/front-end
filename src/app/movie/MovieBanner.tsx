@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import {
   Badge,
@@ -26,12 +26,6 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
     },
     retry: 0,
   });
-  const [isLatest, setIsLatest] = useState<boolean>(true);
-
-  // I used useEffect to prevent infinity rendering loop
-  useEffect(() => {
-    !!movieId ? setIsLatest(false) : setIsLatest(true);
-  }, [movieId]);
 
   const setDefaultBanner = () => {
     return movies?.content?.[movies?.totalItems - 1];
@@ -39,11 +33,14 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
   const setSelectedBanner = (movieId: number) => {
     return movies?.content?.find((movie) => movie.id === movieId);
   };
+  const checkIfDefaultMovie = () => {
+    return !!movieId ? false : true;
+  };
 
   const movie = !!movieId ? setSelectedBanner(movieId!) : setDefaultBanner();
 
   const latest = (
-    <Badge ml={2} mt={7} fontSize="lg" colorScheme="green">
+    <Badge fontSize="lg" colorScheme="green" mt={2} ml={1}>
       <Center mt={0.5}>Latest</Center>
     </Badge>
   );
@@ -59,9 +56,9 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
     <Box>
       <Flex direction="row">
         <Box flex={4}>
-          <Flex>
-            <Heading mt={5}>{movie?.title}</Heading>
-            {isLatest ? latest : null}
+          <Flex mt={10}>
+            <Heading>{movie?.title}</Heading>
+            {checkIfDefaultMovie() ? latest : null}
           </Flex>
           <Flex>
             <Text fontSize="xl" mt={5} fontWeight={400}>

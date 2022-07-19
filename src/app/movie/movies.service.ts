@@ -6,7 +6,8 @@ import { MovieList } from '@/app/movie/movies.types';
 const moviesKeys = {
   all: () => ['moviesService'] as const,
   movies: () => [...moviesKeys.all(), 'movies'] as const,
-  movie: () => [...moviesKeys.all(), 'movie'] as const,
+  movie: ({ id }: { id?: number }) =>
+    [...moviesKeys.all(), 'movie', { id }] as const,
 };
 
 export const useMoviesList = (

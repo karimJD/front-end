@@ -16,12 +16,14 @@ const MoviesListBox = React.lazy(() =>
 export const PageMovies = () => {
   const [movieId, setMovieId] = useState<number | undefined>();
   const [categoryId, setCategoryId] = useState(0);
-  const [isCalled, setIsCalled] = useState(false); // To check if the movies list box is called
+  const [showMovies, setShowMovies] = useState(false); // To check if the movies list box is called
 
   return (
     <Page
       containerSize="xl"
-      nav={<MovieNav setCategoryId={setCategoryId} setIsCalled={setIsCalled} />}
+      nav={
+        <MovieNav setCategoryId={setCategoryId} setShowMovies={setShowMovies} />
+      }
     >
       <PageContent>
         <MovieBanner movieId={movieId} />
@@ -32,7 +34,7 @@ export const PageMovies = () => {
             </Center>
           }
         >
-          {isCalled ? (
+          {showMovies ? (
             <MoviesListBox categoryId={categoryId} setMovieId={setMovieId} />
           ) : null}
         </React.Suspense>
