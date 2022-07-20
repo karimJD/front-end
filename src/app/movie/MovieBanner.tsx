@@ -20,27 +20,30 @@ import { useCategoriesList } from './categories.service';
 import { useMoviesList } from './movies.service';
 import { Category } from './movies.types';
 
-export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
+export type MovieBannerProps = { movieId?: string };
+
+export const MovieBanner: React.FC<MovieBannerProps> = ({ movieId }) => {
   const toastError = useToastError();
+
   const { data: movies, isLoading: isLoadingPage } = useMoviesList({
     onError: () => {
       toastError({ title: 'Something went wrong !' });
     },
     retry: 0,
   });
-  const { data: categories }: any = useCategoriesList();
+
+  const { data: categories } = useCategoriesList();
+
   const setDefaultBanner = () => {
     return movies?.content?.[movies?.totalItems - 1];
   };
-  const setSelectedBanner = (movieId: number) => {
-    return movies?.content?.find((movie) => movie.id === movieId);
-  };
-  const checkIfDefaultMovie = () => {
-    return !!movieId ? false : true;
+
+  const setSelectedBanner = (movieId: string) => {
+    return movies?.content?.find((movie) => movie.id === +movieId);
   };
 
   const movie = !!movieId ? setSelectedBanner(movieId!) : setDefaultBanner();
-  console.log(categories);
+
   const latest = (
     <Badge fontSize="lg" colorScheme="green" mt={2} ml={1}>
       <Center mt={0.5}>Latest</Center>
@@ -60,7 +63,7 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
         <Box flex={4}>
           <Flex mt={10}>
             <Heading>{movie?.title}</Heading>
-            {checkIfDefaultMovie() ? latest : null}
+            {!movieId ? latest : null}
           </Flex>
           <Flex>
             <Text fontSize="xl" mt={5} fontWeight={400}>
@@ -94,7 +97,7 @@ export const MovieBanner = ({ movieId }: { movieId: undefined | number }) => {
             Catégories
           </Text>
           <Flex flexDirection="row">
-            {categories.content.map((category: Category) => (
+            {categories?.content.map((category: Category) => (
               <Center
                 bgColor="green"
                 borderRadius={5}

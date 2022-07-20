@@ -1,19 +1,28 @@
 import React, { useRef } from 'react';
 
-import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
-import { Box, Center, Flex, Heading, Image } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  CircularProgress,
+  Flex,
+  Heading,
+  Image,
+} from '@chakra-ui/react';
+import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
+
+import { Icon } from '@/components';
 
 import { useCategory } from './categories.service';
 import { useMoviesList } from './movies.service';
 
 export const MoviesListBox = ({
-  setMovieId,
+  onMovieClick,
   categoryId,
 }: {
-  setMovieId: (movieId: number) => void | undefined;
-  categoryId: number;
+  onMovieClick: (movieId: number) => void | undefined;
+  categoryId?: number;
 }) => {
-  const { data: movies } = useMoviesList();
+  const { data: movies, isLoading } = useMoviesList();
   const { category } = useCategory(categoryId);
   const slider = useRef<HTMLDivElement>(null);
 
@@ -22,18 +31,26 @@ export const MoviesListBox = ({
   };
 
   const handleImgClick = (id: number) => {
-    setMovieId(id);
+    onMovieClick(id);
     window.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
   };
 
+  if (isLoading) {
+    return (
+      <Center flex="1">
+        <CircularProgress isIndeterminate color="green.300" />
+      </Center>
+    );
+  }
+
   return (
-    <Box mt={50}>
+    <Box>
       <Heading size="lg" ml={5}>
         {category?.name}
       </Heading>
       <Flex flexDirection="row">
         <Center flex={1}>
-          <ArrowLeftIcon onClick={() => scroll(-500)} />
+          <Icon icon={FiArrowLeft} onClick={() => scroll(-500)} />
         </Center>
         <Flex
           flex={10}
@@ -60,7 +77,7 @@ export const MoviesListBox = ({
           ))}
         </Flex>
         <Center flex={1}>
-          <ArrowRightIcon onClick={() => scroll(500)} />
+          <Icon icon={FiArrowRight} onClick={() => scroll(500)} />
         </Center>
       </Flex>
     </Box>

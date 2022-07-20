@@ -1,10 +1,19 @@
-import React from 'react';
+import { Flex } from '@chakra-ui/react';
+import { Route, Routes, useParams } from 'react-router-dom';
 
-import { Route, Routes } from 'react-router-dom';
-
+import { MovieBanner } from '@/app/movie/MovieBanner';
 import { PageMovies } from '@/app/movie/PageMovies';
 import { AuthenticatedRouteGuard } from '@/app/router/guards';
 import { Error404 } from '@/errors';
+
+const PageMovieDetail = () => {
+  const { movieId } = useParams();
+  return (
+    <Flex flex="1">
+      <MovieBanner movieId={movieId} />
+    </Flex>
+  );
+};
 
 const MoviesRoutes = () => {
   return (
@@ -14,6 +23,14 @@ const MoviesRoutes = () => {
         element={
           <AuthenticatedRouteGuard>
             <PageMovies />
+          </AuthenticatedRouteGuard>
+        }
+      />
+      <Route
+        path=":movieId"
+        element={
+          <AuthenticatedRouteGuard>
+            <PageMovieDetail />
           </AuthenticatedRouteGuard>
         }
       />
