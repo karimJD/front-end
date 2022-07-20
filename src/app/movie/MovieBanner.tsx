@@ -8,125 +8,111 @@ import {
   CircularProgress,
   Divider,
   Flex,
+  HStack,
   Heading,
   Image,
   Text,
+  VStack,
 } from '@chakra-ui/react';
 import dayjs from 'dayjs';
-
-import { useToastError } from '@/components';
+import { useNavigate } from 'react-router-dom';
 
 import { useCategoriesList } from './categories.service';
-import { useMoviesList } from './movies.service';
+import { useMovie } from './movies.service';
 import { Category } from './movies.types';
 
 export type MovieBannerProps = { movieId?: string };
 
 export const MovieBanner: React.FC<MovieBannerProps> = ({ movieId }) => {
-  const toastError = useToastError();
-
-  const { data: movies, isLoading: isLoadingPage } = useMoviesList({
-    onError: () => {
-      toastError({ title: 'Something went wrong !' });
-    },
-    retry: 0,
-  });
-
+  const { data: movie, isLoading: isLoadingPage } = useMovie(Number(movieId));
   const { data: categories } = useCategoriesList();
+  const navigate = useNavigate();
 
-  const setDefaultBanner = () => {
-    return movies?.content?.[movies?.totalItems - 1];
-  };
-
-  const setSelectedBanner = (movieId: string) => {
-    return movies?.content?.find((movie) => movie.id === +movieId);
-  };
-
-  const movie = !!movieId ? setSelectedBanner(movieId!) : setDefaultBanner();
-
-  const latest = (
-    <Badge fontSize="lg" colorScheme="green" mt={2} ml={1}>
-      <Center mt={0.5}>Latest</Center>
-    </Badge>
-  );
   if (isLoadingPage) {
     return (
-      <Center>
+      <Center flex={1}>
         <CircularProgress isIndeterminate color="green.300" />
       </Center>
     );
   }
 
   return (
-    <Box>
-      <Flex direction="row">
-        <Box flex={4}>
-          <Flex mt={10}>
-            <Heading>{movie?.title}</Heading>
-            {!movieId ? latest : null}
-          </Flex>
-          <Flex>
-            <Text fontSize="xl" mt={5} fontWeight={400}>
-              {dayjs(movie?.releaseDate).format('D')}
+    <Flex direction="row" flex={1}>
+      <Box flex={4} padding={5}>
+        <Button onClick={() => navigate('/movies')}>Go Back</Button>
+        <Flex mt={5}>
+          <Heading>{movie?.title}</Heading>
+        </Flex>
+        <VStack alignItems="left" spacing={5} mt={3}>
+          <VStack alignItems="left" spacing={2}>
+            <HStack alignItems="left">
+              <Text fontSize="xl" fontWeight={400}>
+                {dayjs(movie?.releaseDate).format('D')}
+              </Text>
+              <Text fontSize="xl" fontWeight={400}>
+                {dayjs(movie?.releaseDate).format('MMMM')}
+              </Text>
+              <Text fontSize="xl" fontWeight={400}>
+                {dayjs(movie?.releaseDate).format('YYYY')}
+              </Text>
+            </HStack>
+            <Text fontSize="xl" fontWeight={400}>
+              {movie?.duration} minutes
             </Text>
-            <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
-              {dayjs(movie?.releaseDate).format('MMMM')}
+            <Text fontSize="xl" fontWeight={400}>
+              +{movie?.ageLimit} ans
             </Text>
-            <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
-              {dayjs(movie?.releaseDate).format('YYYY')}
+          </VStack>
+          <VStack spacing={1}>
+            <Text fontSize="md">{movie?.description}</Text>
+            <Divider orientation="horizontal" />
+          </VStack>
+          <VStack spacing={1} alignItems="left">
+            <Flex>
+              <Text fontSize="xl" fontWeight={400}>
+                Acteurs:
+              </Text>
+              <Text fontSize="lg" fontWeight={300} ml={2} mt={0.5}>
+                {movie?.actors}
+              </Text>
+            </Flex>
+            <Divider orientation="horizontal" />
+          </VStack>
+          <VStack spacing={1} alignItems="left">
+            <Text fontSize="xl" fontWeight={400}>
+              Catégories
             </Text>
-          </Flex>
-          <Text fontSize="xl" fontWeight={400} mt={2}>
-            {movie?.duration} minutes
-          </Text>
-          <Text fontSize="xl" fontWeight={400} mt={2}>
-            +{movie?.ageLimit} ans
-          </Text>
-          <Text fontSize="md" mt={8}>
-            {movie?.description}
-          </Text>
-          <Divider orientation="horizontal" />
-          <Text fontSize="xl" fontWeight={400} mt={5}>
-            Acteurs
-          </Text>
-          <Text fontSize="lg" fontWeight={300} mt={1}>
-            {movie?.actors}
-          </Text>
-          <Divider orientation="horizontal" />
-          <Text fontSize="xl" fontWeight={400} mt={5}>
-            Catégories
-          </Text>
-          <Flex flexDirection="row">
-            {categories?.content.map((category: Category) => (
-              <Center
-                bgColor="green"
-                borderRadius={5}
-                mt={1}
-                flex={1}
-                margin={2}
-              >
-                <Text fontSize="lg" fontWeight={400}>
-                  {category.name}
-                </Text>
-              </Center>
-            ))}
-          </Flex>
-          <Center mt={10}>
+            <Flex flexDirection="row">
+              {categories?.content.map((category: Category) => (
+                <Center
+                  bgColor="green"
+                  borderRadius={5}
+                  mt={1}
+                  flex={1}
+                  margin={2}
+                >
+                  <Text fontSize="lg" fontWeight={400}>
+                    {category.name}
+                  </Text>
+                </Center>
+              ))}
+            </Flex>
+          </VStack>
+          <Center>
             <Button colorScheme="teal" size="lg">
               Watch Now
             </Button>
           </Center>
-        </Box>
-        <Box flex={2}>
-          <Image
-            mt={10}
-            borderRadius={10}
-            src={
-              'https://upload.wikimedia.org/wikipedia/en/3/31/Interceptor_%28film%29.jpg'
-            }
-          />
-        </Box>
-      </Flex>
-    </Box>
+        </VStack>
+      </Box>
+      <Center flex={2}>
+        <Image
+          borderRadius={10}
+          src={
+            'https://upload.wikimedia.org/wikipedia/en/3/31/Interceptor_%28film%29.jpg'
+          }
+        />
+      </Center>
+    </Flex>
   );
 };
