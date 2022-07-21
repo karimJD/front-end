@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {
-  Badge,
   Box,
   Button,
   Center,
@@ -107,6 +106,7 @@ export const MovieBanner: React.FC<MovieBannerProps> = ({ movieId }) => {
       </Box>
       <Center flex={2}>
         <Image
+          boxSize="sm"
           borderRadius={10}
           src={
             'https://upload.wikimedia.org/wikipedia/en/3/31/Interceptor_%28film%29.jpg'

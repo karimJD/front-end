@@ -13,7 +13,6 @@ export const MovieNav = ({
 
   const onCategoryChange = (categoryId: number) => {
     setCategoryId(categoryId);
-    window.scrollTo({ left: 0, top: 500, behavior: 'smooth' });
   };
 
   return (

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Page, PageContent } from '@/app/layout';
-import { MoviesListBox } from '@/app/movie/MoviesListBox';
+import { MoviesList } from '@/app/movie/MoviesList';
 
 import { MovieNav } from './MovieNav';
 
@@ -14,7 +14,7 @@ export const PageMovies = () => {
   return (
     <Page containerSize="xl" nav={<MovieNav setCategoryId={setCategoryId} />}>
       <PageContent>
-        <MoviesListBox
+        <MoviesList
           categoryId={categoryId}
           onMovieClick={(id) => navigate('/movies/' + id)}
         />
