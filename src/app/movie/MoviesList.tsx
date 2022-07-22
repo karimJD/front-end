@@ -2,12 +2,13 @@ import React, { ChangeEvent, useState } from 'react';
 
 import {
   Center,
-  CircularProgress,
+  Flex,
   Heading,
   Image,
   Input,
   InputGroup,
   InputRightElement,
+  Skeleton,
   VStack,
   Wrap,
   WrapItem,
@@ -25,16 +26,14 @@ export const MoviesList = ({
   onMovieClick: (movieId: number) => void | undefined;
   categoryId?: number;
 }) => {
-  const { data: movies, isLoading } = useMoviesList();
-  const { category } = useCategory(categoryId);
+  const { data: movies } = useMoviesList();
+  const { category, isLoading: categoryLoading } = useCategory(categoryId);
   const [inputText, setInputText] = useState('');
 
-  const inputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
-    const lowerCase = target.value.toLowerCase();
+  const inputHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const lowerCase = event.target.value.toLowerCase();
     setInputText(lowerCase);
   };
-
   const filteredData: Array<Movie> | undefined = movies?.content.filter(
     (movies) => {
       if (!!inputText) {
@@ -45,43 +44,39 @@ export const MoviesList = ({
     }
   );
 
-  if (isLoading) {
-    return (
-      <Center flex="1">
-        <CircularProgress isIndeterminate color="green.300" />
-      </Center>
-    );
-  }
-
   return (
     <>
-      <Heading size="lg" p={2}>
-        {!!categoryId ? category?.name : 'Action'}
-      </Heading>
-      <InputGroup>
-        <Input placeholder="Search movie.." onChange={inputHandler} />
-        <InputRightElement
-          children={<FaSearch name="AddIcon" color="green.500" />}
-        />
-      </InputGroup>
-      <Wrap spacing={6} mt={3}>
-        {filteredData?.map((movie: any) => (
-          <WrapItem key={movie.id}>
-            <VStack spacing={1} _hover={{ transform: 'scale(1.2)' }}>
-              <Image
-                w={150}
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXCDeWcTDLEWXq-hhpO5gUZh-rB0QNhSLvCRwUfPk1Vft1tBSH"
-                borderRadius="lg"
-                _hover={{ cursor: 'pointer' }}
-                onClick={() => onMovieClick(movie.id)}
-              />
-              <Center>
-                <Heading size="sm">{movie.title}</Heading>
-              </Center>
-            </VStack>
-          </WrapItem>
-        ))}
-      </Wrap>
+      <Flex direction="column">
+        <Skeleton isLoaded={!categoryLoading} flex={1} noOfLines={1}>
+          <Heading size="lg" p={2}>
+            {!!categoryId ? category?.name : 'Action'}
+          </Heading>
+        </Skeleton>
+        <InputGroup flex={1} pt={1}>
+          <Input placeholder="Search movie.." onChange={inputHandler} />
+          <InputRightElement
+            children={<FaSearch name="AddIcon" color="green.500" />}
+          />
+        </InputGroup>
+        <Wrap spacing={6} flex={30} justify="center">
+          {filteredData?.map((movie: Movie) => (
+            <WrapItem key={movie.id} p={3}>
+              <VStack spacing={1} _hover={{ transform: 'scale(1.1)' }}>
+                <Image
+                  w={150}
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXCDeWcTDLEWXq-hhpO5gUZh-rB0QNhSLvCRwUfPk1Vft1tBSH"
+                  borderRadius="lg"
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={() => onMovieClick(movie.id)}
+                />
+                <Center>
+                  <Heading size="sm">{movie.title}</Heading>
+                </Center>
+              </VStack>
+            </WrapItem>
+          ))}
+        </Wrap>
+      </Flex>
     </>
   );
 };
