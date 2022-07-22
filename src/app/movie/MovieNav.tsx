@@ -1,51 +1,28 @@
 import React from 'react';
 
-// import { useTranslation } from 'react-i18next';
-
-import { Link } from 'react-router-dom';
-
 import { Nav, NavGroup, NavItem } from '@/components';
 
-export const MovieNav = ({setCategoryId}: any) => {
- // const { t } = useTranslation();
+import { useCategoriesList } from './categories.service';
 
- const handleClick = (categoryId: number) => {
-  setCategoryId(categoryId);
-  window.scrollTo({ left: 0, top: 500, behavior: "smooth" });
- }
+export const MovieNav = ({
+  setCategoryId,
+}: {
+  setCategoryId: (categoryId: number) => void;
+}) => {
+  const { data: categories } = useCategoriesList();
+
+  const onCategoryChange = (categoryId: number) => {
+    setCategoryId(categoryId);
+  };
 
   return (
     <Nav>
       <NavGroup>
-        <NavItem
-        onClick={() => handleClick(1)}
-        >
-          Action
-        </NavItem>
-        <NavItem
-        onClick={() => handleClick(4)}
-        >
-          Drama
-        </NavItem>
-        <NavItem
-        onClick={() => handleClick(5)}
-        >
-          Comedy
-        </NavItem>
-        <NavItem
-        onClick={() => handleClick(3)}
-          //as={Link}
-          //to="/admin/api"
-          //isActive={isActive('/admin/api')}
-        >
-          Sifi
-        </NavItem>
-        <NavItem
-        onClick={() => handleClick(2)}
-          //isActive={isActive('/admin/api')}
-        >
-          Horror
-        </NavItem>
+        {categories?.content.map((category) => (
+          <NavItem onClick={() => onCategoryChange(category.id)}>
+            {category.name}
+          </NavItem>
+        ))}
       </NavGroup>
     </Nav>
   );

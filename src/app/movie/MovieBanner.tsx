@@ -4,161 +4,115 @@ import {
   Box,
   Button,
   Center,
+  CircularProgress,
   Divider,
   Flex,
+  HStack,
   Heading,
   Image,
   Text,
-  Badge
+  VStack,
 } from '@chakra-ui/react';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
-import { useMoviesList } from './movies.service';
+import { useCategoriesList } from './categories.service';
+import { useMovie } from './movies.service';
+import { Category } from './movies.types';
 
-export const MovieBanner = ({ movieId }: { movieId: number}) => {
-  let display: any = 'Just preventing error by this char';
+export type MovieBannerProps = { movieId?: string };
 
-  const { movies, isLoadingPage } = useMoviesList();
+export const MovieBanner: React.FC<MovieBannerProps> = ({ movieId }) => {
+  const { data: movie, isLoading: isLoadingPage } = useMovie(Number(movieId));
+  const { data: categories } = useCategoriesList();
+  const navigate = useNavigate();
 
-  const setMonth = (month: number) => {
-    switch (month) {
-      case 1:
-        return 'january';
-
-      case 2:
-        return 'February';
-
-      case 3:
-        return 'March';
-
-      case 4:
-        return 'April';
-
-      case 5:
-        return 'May';
-
-      case 6:
-        return 'June';
-
-      case 7:
-        return 'July';
-
-      case 8:
-        return 'August';
-
-      case 9:
-        return 'September';
-
-      case 10:
-        return 'October';
-
-      case 11:
-        return 'November';
-
-      case 12:
-        return 'December';
-    }
-  };
-
-  if (movieId === -1) {
-    if (isLoadingPage === false) {
-      display = movies![movies!.length - 1];
-    }
-  } else {
-    movies?.map((movie) => {
-      if (movie.id === movieId) {
-        display = movie;
-        let month = display.releaseDate.substr(5, 2);
-        setMonth(month);
-      }
-    });
+  if (isLoadingPage) {
+    return (
+      <Center flex={1}>
+        <CircularProgress isIndeterminate color="green.300" />
+      </Center>
+    );
   }
 
-
   return (
-    <Box>
-      <Flex direction="row">
-        <Box flex={4}>
-          <Flex>
-            <Heading mt={5}>
-              {isLoadingPage ? 'loading...' : display.title}
-            </Heading>
-            <Badge ml='1' mt={7} fontSize='lg' colorScheme='green'>
-              <Center mt={0.5}>Latest</Center>
-            </Badge>
-          </Flex>
-          <Flex>
-              <Text fontSize="xl" mt={5} fontWeight={400}>
-                {isLoadingPage
-                  ? 'loading...'
-                  : display.releaseDate.substr(8, 2)}
+    <Flex direction="row" flex={1}>
+      <Box flex={4} padding={5}>
+        <Button onClick={() => navigate('/movies')}>Go Back</Button>
+        <Flex mt={5}>
+          <Heading>{movie?.title}</Heading>
+        </Flex>
+        <VStack alignItems="left" spacing={5} mt={3}>
+          <VStack alignItems="left" spacing={2}>
+            <HStack alignItems="left">
+              <Text fontSize="xl" fontWeight={400}>
+                {dayjs(movie?.releaseDate).format('D')}
               </Text>
-              <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
-                {isLoadingPage
-                  ? 'loading...'
-                  : setMonth(parseInt(display.releaseDate.substr(5, 2), 10))}
+              <Text fontSize="xl" fontWeight={400}>
+                {dayjs(movie?.releaseDate).format('MMMM')}
               </Text>
-              <Text fontSize="xl" mt={5} fontWeight={400} ml={2}>
-                {isLoadingPage
-                  ? 'loading...'
-                  : display.releaseDate.substr(0, 4)}
+              <Text fontSize="xl" fontWeight={400}>
+                {dayjs(movie?.releaseDate).format('YYYY')}
               </Text>
-          </Flex>
-          <Text fontSize="xl" fontWeight={400} mt={2}>
-            {isLoadingPage ? 'loading...' : display.duration} minutes
-          </Text>
-          <Text fontSize="xl" fontWeight={400} mt={2}>
-            +{isLoadingPage ? 'loading...' : display.ageLimit} ans
-          </Text>
-          <Text fontSize="md" mt={8}>
-            {isLoadingPage ? 'loading...' : display.description}
-          </Text>
-          <Divider orientation="horizontal" />
-            <Text fontSize="xl" fontWeight={400} mt={5}>Acteurs</Text>
-            <Text fontSize="lg" fontWeight={300} mt={1}>
-              {isLoadingPage ? 'loading...' : display.actors}
+            </HStack>
+            <Text fontSize="xl" fontWeight={400}>
+              {movie?.duration} minutes
             </Text>
-          <Divider orientation="horizontal" />
-              <Text fontSize="xl" fontWeight={400} mt={5}>Catégories</Text>
-              <Flex>
-              <Box bgColor='green' borderRadius={5} w={100}  mt={1}>
-                <Center>
+            <Text fontSize="xl" fontWeight={400}>
+              +{movie?.ageLimit} ans
+            </Text>
+          </VStack>
+          <VStack spacing={1}>
+            <Text fontSize="md">{movie?.description}</Text>
+            <Divider orientation="horizontal" />
+          </VStack>
+          <VStack spacing={1} alignItems="left">
+            <Flex>
+              <Text fontSize="xl" fontWeight={400}>
+                Acteurs:
+              </Text>
+              <Text fontSize="lg" fontWeight={300} ml={2} mt={0.5}>
+                {movie?.actors}
+              </Text>
+            </Flex>
+            <Divider orientation="horizontal" />
+          </VStack>
+          <VStack spacing={1} alignItems="left">
+            <Text fontSize="xl" fontWeight={400}>
+              Catégories
+            </Text>
+            <Flex flexDirection="row">
+              {categories?.content.map((category: Category) => (
+                <Center
+                  bgColor="green"
+                  borderRadius={5}
+                  mt={1}
+                  flex={1}
+                  margin={2}
+                >
                   <Text fontSize="lg" fontWeight={400}>
-                    Romance
+                    {category.name}
                   </Text>
                 </Center>
-              </Box>
-              <Box bgColor='green' borderRadius={5} w={100}  mt={1} ml={2}>
-                <Center>
-                  <Text fontSize="lg" fontWeight={400}>
-                    Action
-                  </Text>
-                </Center>
-              </Box>
-              <Box bgColor='green' borderRadius={5} w={100}  mt={1} ml={2}>
-                <Center>
-                  <Text fontSize="lg" fontWeight={400}>
-                    Horror
-                  </Text>
-                </Center>
-              </Box>
-              </Flex>
-          <Center mt={10}>
+              ))}
+            </Flex>
+          </VStack>
+          <Center>
             <Button colorScheme="teal" size="lg">
               Watch Now
             </Button>
           </Center>
-        </Box>
-        <Box flex={2}>
-          <Image
-            mt={10}
-            borderRadius={10}
-            mr={0}
-            h={400}
-            w={300}
-            src={`data:image/jpeg;base64,${display.image}`}
-          />
-        </Box>
-      </Flex>
-    </Box>
+        </VStack>
+      </Box>
+      <Center flex={2}>
+        <Image
+          boxSize="sm"
+          borderRadius={10}
+          src={
+            'https://upload.wikimedia.org/wikipedia/en/3/31/Interceptor_%28film%29.jpg'
+          }
+        />
+      </Center>
+    </Flex>
   );
 };
